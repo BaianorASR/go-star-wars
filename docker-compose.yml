@@ -1,19 +1,18 @@
 version: "3"
 
 services:
-  my-app:
-    image: cosmtrek/air
-    # working_dir value has to be the same of mapped volume
-    working_dir: /project
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - 3001:3001
+    depends_on:
+      - mongodb
     volumes:
-      - ./:/project/ 
-    links: 
-    - mongodb
-    container_name: my-app
+      - ./:/app
     environment: 
-    - PORT=8000
+    - PORT=3001
     - MONGO_HOST=mongodb
     - MONGO_USER=root
     - MONGO_PASSWORD=rootpassword
@@ -31,6 +30,6 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - database:/data/db
+      - mogo_data:/data/db
 volumes:
-  database:
+  mogo_data:

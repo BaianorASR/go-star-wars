@@ -12,9 +12,8 @@ func main() {
 	app := gin.New()
 	router := app.Group("/api/v1")
 	routes.AddRoutes(router)
-	println("1")
 
-	if err := app.Run(":3001"); err != nil {
-		panic(err)
-	}
+	app.Run(":3001")
+
+
 }
