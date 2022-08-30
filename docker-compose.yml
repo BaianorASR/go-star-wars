@@ -1,42 +1,29 @@
 version: "3"
 
 services:
-  # my-project-with-air:
-  #   # working_dir value has to be the same of mapped volume
-  #   working_dir: /project-package
-  #   ports:
-  #     - <any>:<any>
-  #   environment:
-  #     - ENV_A=${ENV_A}
-  #     - ENV_B=${ENV_B}
-  #     - ENV_C=${ENV_C}
-  #   volumes:
-  #     - ./project-relative-path/:/project-package/
-  api:
+  my-app:
     image: cosmtrek/air
-    # build: .
-    user: root
-    working_dir: /app
-    volumes:
-      - ./:/app
-    tty: true
-    stdin_open: true
-    restart: always
-    depends_on:
-      - db
-      - redis
+    # working_dir value has to be the same of mapped volume
+    working_dir: /project
     ports:
-      - 3001:3001
-    environment:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      HOSTNAME: db
-      JWT_SECRET: secretJWT
+      - 8000:8000
+    volumes:
+      - ./:/project/ 
+    links: 
+    - mongodb
+    container_name: my-app
+    environment: 
+    - PORT=8000
+    - MONGO_HOST=mongodb
+    - MONGO_USER=root
+    - MONGO_PASSWORD=rootpassword
+    - MONGO_PORT=27017
+    - MONGO_DATABASE=starwars
   redis:
     image: redis:7.0.2-alpine
     restart: always
-  db:
-    container_name: mongo_db
+  mongodb:
+    container_name: mongodb
     image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
