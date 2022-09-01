@@ -1,12 +1,19 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	planetscontroller "github.com/BaianorASR/go-star-wars/controller/planets"
+	"github.com/BaianorASR/go-star-wars/middleware"
+	"github.com/gin-gonic/gin"
+)
 
 func planetRoute(router *gin.RouterGroup) {
 	r := router.Group("/planets")
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	// Reset database
+	r.DELETE("/reset-db", planetscontroller.Reset)
+
+	// CRUD
+	r.POST("/", middleware.PlanetsValidate, planetscontroller.Create)
+	r.GET("/", planetscontroller.Find)
+	r.GET("/:id", planetscontroller.FindById)
+	r.DELETE("/:id", planetscontroller.DeleteOne)
 }
