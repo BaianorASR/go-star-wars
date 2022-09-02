@@ -16,6 +16,7 @@ type Res struct {
 	Result []planet `json:"results" bson:"results"`
 }
 
+// getPlanets returns all planets in the Star Wars API
 func getPlanets() []planet {
 	var planets Res
 

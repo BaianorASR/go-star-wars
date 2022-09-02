@@ -1,6 +1,7 @@
 package planetscontroller
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -13,6 +14,8 @@ import (
 
 func Create(c *gin.Context) {
 	db := database.ConnectDB()
+	defer db.Disconnect(context.TODO())
+
 	repo := planetsrepository.New(db)
 	useCase := planetsusecase.New(repo)
 

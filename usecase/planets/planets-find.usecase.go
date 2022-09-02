@@ -1,13 +1,30 @@
 package planetsusecase
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/BaianorASR/go-star-wars/entities"
 	"github.com/BaianorASR/go-star-wars/utils"
+	"github.com/BaianorASR/go-star-wars/utils/redis"
 )
 
-func (u planetsUseCase) Find(query string) (*[]entities.Planet, error) {
+// Find return all planets
+func (u planetsUseCase) Find(query string) (any, error) {
+	var cacheKey string
+	if query == "" {
+		cacheKey = "planets-find-all"
+	} else {
+		cacheKey = fmt.Sprintf("planets-find-%s", query)
+	}
+
+	// Check if exists cached value
+	if cached, err := redis.Get[[]entities.Planet](fmt.Sprintf(cacheKey)); err != nil {
+		return nil, err
+	} else if cached != nil {
+		return cached, nil
+	}
+
 	planets, err := u.repo.Find(query)
 	if err != nil {
 		return nil, err
@@ -34,6 +51,10 @@ func (u planetsUseCase) Find(query string) (*[]entities.Planet, error) {
 		if i == len(*planets)-1 {
 			wg.Wait()
 		}
+	}
+
+	if err := redis.Set(cacheKey, planets); err != nil {
+		return nil, err
 	}
 
 	return planets, nil

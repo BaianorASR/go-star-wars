@@ -1,6 +1,7 @@
 package planetscontroller
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/BaianorASR/go-star-wars/database"
@@ -16,8 +17,10 @@ func DeleteOne(c *gin.Context) {
 	var err error
 
 	// make implementation
-	Db := database.ConnectDB()
-	repo := planetsrepository.New(Db)
+	db := database.ConnectDB()
+	defer db.Disconnect(context.TODO())
+
+	repo := planetsrepository.New(db)
 	useCase := planetsusecase.New(repo)
 
 	id := c.Param("id")

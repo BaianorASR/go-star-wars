@@ -1,6 +1,7 @@
 package planetscontroller
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/BaianorASR/go-star-wars/database"
@@ -16,6 +17,8 @@ func FindById(c *gin.Context) {
 	var err error
 
 	db := database.ConnectDB()
+	defer db.Disconnect(context.TODO())
+
 	repo := planetsrepository.New(db)
 	usecase := planetsusecase.New(repo)
 
