@@ -1,6 +1,6 @@
 package entities
 
-// Planet represents a planet in the solar system.
+// Planet represents a planet in the solar system
 type Planet struct {
 	ID      string `json:"id" bson:"_id"`
 	Name    string `json:"name" bson:"name"`
