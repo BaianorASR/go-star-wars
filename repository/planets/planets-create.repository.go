@@ -2,6 +2,7 @@ package planetsrepository
 
 import (
 	"context"
+	"strings"
 
 	"github.com/BaianorASR/go-star-wars/entities"
 	"github.com/americanas-go/errors"
@@ -18,7 +19,10 @@ func (r *planetsRepository) Create(planet *entities.Planet) (*entities.Planet, e
 		{Key: "films", Value: planet.Films},
 	})
 	if err != nil {
-		return nil, errors.NewInternal(err, "error on create")
+		if strings.Contains(err.Error(), "Unauthorized") {
+			return nil, errors.Unauthorizedf("Unauthorized to create planet, please see you credentials")
+		}
+		return nil, errors.Internalf(err.Error())
 	}
 
 	planet.ID = result.InsertedID.(primitive.ObjectID).Hex()

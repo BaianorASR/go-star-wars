@@ -1,18 +1,54 @@
-version: "3"
+version: "3.9"
 
 services:
+  redis:
+    container_name: redis
+    image: redis:7.0.2-alpine
+    restart: always
+    networks:
+      - dev
+  mongo:
+    container_name: mongo
+    image: mongo:6.0
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - $MONGO_PORT:$MONGO_PORT
+    networks:
+      - dev
+  mongo-seed:
+    env_file:
+      - .env
+    build:
+      context: ./mongo-seed
+      dockerfile: Dockerfile
+      args:
+        - MONGO_INITDB_ROOT_USERNAME
+        - MONGO_INITDB_ROOT_PASSWORD
+    container_name: mongo-seed
+    depends_on:
+    - mongo
+    networks:
+      - dev
   api:
+    container_name: api
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3001:3001
+      - ${PORT}:${PORT}
     depends_on:
+      - mongo
       - redis
+      - mongo-seed
     volumes:
       - ./:/app
-    environment: 
-    - PORT=3001
-  redis:
-    image: redis:7.0.2-alpine
+    env_file:
+      - .env
     restart: always
+    networks:
+      - dev
+networks:
+  dev:
+    driver: bridge

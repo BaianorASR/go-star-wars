@@ -3,7 +3,6 @@ package planetscontroller
 import (
 	"context"
 	"net/http"
-	"strings"
 
 	"github.com/BaianorASR/go-star-wars/database"
 	planetsrepository "github.com/BaianorASR/go-star-wars/repository/planets"
@@ -20,12 +19,7 @@ func Find(c *gin.Context) {
 	repo := planetsrepository.New(db)
 	useCase := planetsusecase.New(repo)
 
-	query := c.Query("query")
-	if query != "" {
-		query = strings.ToUpper(query[:1]) + strings.ToLower(query[1:])
-	}
-
-	planets, err := useCase.Find(query)
+	planets, err := useCase.Find()
 	if err != nil {
 		if errors.IsNotFound(err) {
 			c.JSON(http.StatusNotFound, gin.H{

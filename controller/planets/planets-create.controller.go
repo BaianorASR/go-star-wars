@@ -2,13 +2,13 @@ package planetscontroller
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/BaianorASR/go-star-wars/database"
 	"github.com/BaianorASR/go-star-wars/entities"
 	planetsrepository "github.com/BaianorASR/go-star-wars/repository/planets"
 	planetsusecase "github.com/BaianorASR/go-star-wars/usecase/planets"
+	"github.com/americanas-go/errors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,11 +22,20 @@ func Create(c *gin.Context) {
 	var planet *entities.Planet
 	c.BindJSON(&planet)
 
-	fmt.Println(planet)
-
 	planet, err := useCase.Create(planet)
 	if err != nil {
-		c.AbortWithStatusJSON(404, gin.H{"error": err.Error()})
+		if errors.IsUnauthorized(err) {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error":  err.Error(),
+				"status": http.StatusUnauthorized,
+			})
+		} else {
+			println("Error: ", err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":  err.Error(),
+				"status": http.StatusInternalServerError,
+			})
+		}
 		return
 	}
 

@@ -11,8 +11,9 @@ type planetsRepository struct {
 }
 
 type IPlanetsRepository interface {
-	Find(query string) (*[]entities.Planet, error)
+	Find() (*[]entities.Planet, error)
 	FindById(id primitive.ObjectID) (*entities.Planet, error)
+	FindByName(name string) (*entities.Planet, error)
 	DeleteOne(id primitive.ObjectID) error
 	Create(planet *entities.Planet) (*entities.Planet, error)
 }

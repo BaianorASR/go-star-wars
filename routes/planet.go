@@ -14,6 +14,7 @@ func planetRoute(router *gin.RouterGroup) {
 	// CRUD
 	r.POST("/", middleware.PlanetsValidate, planetscontroller.Create)
 	r.GET("/", planetscontroller.Find)
+	r.GET("/search", planetscontroller.FindByName)
 	r.GET("/:id", planetscontroller.FindById)
 	r.DELETE("/:id", planetscontroller.DeleteOne)
 }

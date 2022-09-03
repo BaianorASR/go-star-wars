@@ -6,3 +6,4 @@ func AddRoutes(superRoute *gin.RouterGroup) {
 	planetRoute(superRoute)
 	// loginRoute(superRoute)
 }
+ 

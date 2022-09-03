@@ -34,6 +34,8 @@ Foi proposto um desafio pela Americanas. Onde seria criar um jogo com algumas in
 
 > **/planets** > _Lista todos os planetas._
 
+> **/planets/search?query=** > _Encontra planeta pelo nome._
+
 > **/planets/:id** > _Encontra o planeta pelo id._
 
 
@@ -70,6 +72,9 @@ Foi proposto um desafio pela Americanas. Onde seria criar um jogo com algumas in
   git clone git@github.com:BaianorASR/go-star-wars.git && cd go-star-wars
   ```
 
+- Configure as variáveis de ambiente no arquivo **.env.example** e renomeie para **.env**.:
+
+
 - Execute o docker para subir o banco de dados:
 
   ```bash
@@ -77,7 +82,10 @@ Foi proposto um desafio pela Americanas. Onde seria criar um jogo com algumas in
   ```
 
 - Conecte no servidor:
-  - localhost:3001/api/v1
+  - **port é a sua porta configurado no .env:**
+    ```bash
+    localhost:port/api/v1
+    ```
 
 #
 

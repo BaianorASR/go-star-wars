@@ -10,13 +10,8 @@ import (
 )
 
 // Find return all planets
-func (u planetsUseCase) Find(query string) (any, error) {
-	var cacheKey string
-	if query == "" {
-		cacheKey = "planets-find-all"
-	} else {
-		cacheKey = fmt.Sprintf("planets-find-%s", query)
-	}
+func (u planetsUseCase) Find() (any, error) {
+	cacheKey := "planets-find-all"
 
 	// Check if exists cached value
 	if cached, err := redis.Get[[]entities.Planet](fmt.Sprintf(cacheKey)); err != nil {
@@ -25,7 +20,7 @@ func (u planetsUseCase) Find(query string) (any, error) {
 		return cached, nil
 	}
 
-	planets, err := u.repo.Find(query)
+	planets, err := u.repo.Find()
 	if err != nil {
 		return nil, err
 	}

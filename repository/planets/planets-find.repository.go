@@ -5,25 +5,20 @@ import (
 
 	"github.com/BaianorASR/go-star-wars/entities"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Find return all planets when query is empty or planets that match with query
-func (r *planetsRepository) Find(query string) (*[]entities.Planet, error) {
-	println(query)
+// Find return all planets
+func (r *planetsRepository) Find() (*[]entities.Planet, error) {
+	var planets []entities.Planet
 
-	filter := bson.D{{Key: "name", Value: bson.D{{Key: "$regex", Value: query}}}}
-
-	// Make pagination letter
-	// options := new(options.FindOptions)
-	// options.SetLimit(10)
-	// options.SetSkip(0)
-
-	data, err := r.client.Find(context.TODO(), filter)
+	data, err := r.client.Find(context.TODO(), bson.D{}, &options.FindOptions{
+		Sort: bson.D{{Key: "name", Value: 1}},
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	var planets []entities.Planet
 	if err := data.All(context.TODO(), &planets); err != nil {
 		return nil, err
 	}

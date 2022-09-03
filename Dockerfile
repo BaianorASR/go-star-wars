@@ -1,8 +1,6 @@
 FROM golang
 
-RUN apt update && apt upgrade -y && \
-    apt install -y git \
-    make openssh-client
+RUN apt update && apt upgrade -y
 
 WORKDIR /app 
 
