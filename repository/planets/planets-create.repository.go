@@ -2,6 +2,7 @@ package planetsrepository
 
 import (
 	"context"
+	"reflect"
 	"strings"
 
 	"github.com/BaianorASR/go-star-wars/entities"
@@ -11,6 +12,12 @@ import (
 )
 
 func (r *planetsRepository) Create(planet *entities.Planet) (*entities.Planet, error) {
+	var exists entities.Planet
+	r.client.FindOne(context.Background(), bson.M{"name": planet.Name}).Decode(&exists)
+
+	if !reflect.ValueOf(exists).IsZero() {
+		return nil, errors.NewConflict(nil, "planet already exists")
+	}
 
 	result, err := r.client.InsertOne(context.TODO(), bson.D{
 		{Key: "name", Value: planet.Name},

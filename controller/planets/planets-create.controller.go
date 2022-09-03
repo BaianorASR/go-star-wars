@@ -29,8 +29,12 @@ func Create(c *gin.Context) {
 				"error":  err.Error(),
 				"status": http.StatusUnauthorized,
 			})
+		} else if errors.IsConflict(err) {
+			c.JSON(http.StatusConflict, gin.H{
+				"error":  err.Error(),
+				"status": http.StatusConflict,
+			})
 		} else {
-			println("Error: ", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error":  err.Error(),
 				"status": http.StatusInternalServerError,

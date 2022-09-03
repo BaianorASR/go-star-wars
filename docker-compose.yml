@@ -9,7 +9,7 @@ services:
       - dev
   mongo:
     container_name: mongo
-    image: mongo:6.0
+    image: mongo
     restart: always
     env_file:
       - .env
@@ -17,6 +17,8 @@ services:
       - $MONGO_PORT:$MONGO_PORT
     networks:
       - dev
+    depends_on:
+      - mongo-seed
   mongo-seed:
     env_file:
       - .env
@@ -24,11 +26,10 @@ services:
       context: ./mongo-seed
       dockerfile: Dockerfile
       args:
+        - MONGO_PORT
         - MONGO_INITDB_ROOT_USERNAME
         - MONGO_INITDB_ROOT_PASSWORD
     container_name: mongo-seed
-    depends_on:
-    - mongo
     networks:
       - dev
   api:
@@ -37,11 +38,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - ${PORT}:${PORT}
+      - $PORT:$PORT
     depends_on:
+      - mongo-seed
       - mongo
       - redis
-      - mongo-seed
     volumes:
       - ./:/app
     env_file:

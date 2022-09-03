@@ -13,6 +13,8 @@
 *.dylib
 .tmp
 .env
+/.env
+./.env
 
 # Test binary, built with `go test -c`
 *.test
@@ -29,3 +31,4 @@ go.work
 ### Go Patch ###
 /vendor/
 /Godeps/
+.env
